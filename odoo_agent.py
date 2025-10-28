@@ -1,16 +1,16 @@
 """
-PostgreSQL AI Agent - CLI Interface
-Main entry point for the application
+Odoo.sh PostgreSQL AI Agent - CLI Interface
+Entry point for connecting to Odoo.sh databases
 """
 
 import sys
 import argparse
-from app.core.agent import DatabaseAgent
+from app.core.odoo_agent import OdooDatabaseAgent
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='PostgreSQL AI Agent - Query database with natural language'
+        description='Odoo.sh AI Agent - Query Odoo database with natural language'
     )
     
     parser.add_argument(
@@ -25,15 +25,31 @@ def main():
         help='Run in interactive mode'
     )
     
+    parser.add_argument(
+        '--test-connection',
+        action='store_true',
+        help='Test database connection'
+    )
+    
     args = parser.parse_args()
     
     # Initialize agent
-    agent = DatabaseAgent()
+    agent = OdooDatabaseAgent()
     
     try:
-        if args.interactive:
+        if args.test_connection:
+            # Test connection mode
+            print("\n🔌 Testing Odoo.sh connection...")
+            success = agent.db.test_connection()
+            if success:
+                print("✅ Connection successful!")
+            else:
+                print("❌ Connection failed!")
+                sys.exit(1)
+                
+        elif args.interactive:
             # Interactive mode
-            print("\n🤖 PostgreSQL AI Agent - Interactive Mode")
+            print("\n🤖 Odoo.sh AI Agent - Interactive Mode")
             print("Type 'exit' or 'quit' to exit\n")
             
             while True:
@@ -65,3 +81,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

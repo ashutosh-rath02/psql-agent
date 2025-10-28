@@ -1,0 +1,128 @@
+
+======================================================================
+Timestamp: 2025-10-28 12:29:55
+Question: What is the total sales amount?
+Generated SQL: SELECT SUM(amount_total) AS total_sales
+FROM sale_order
+WHERE active = TRUE
+  AND state != 'cancel';...
+Token Usage:
+  - Prompt Tokens: 985
+  - Candidates Tokens: 34
+  - Total Tokens: 1019
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-28 12:30:26
+Question: Show me top 3 customers by orders
+Generated SQL: SELECT
+  rp.name AS customer_name,
+  COUNT(ai.id) AS order_count
+FROM res_partner AS rp
+JOIN account_invoice AS ai
+  ON rp.id = ai.partner_id
+WHERE
+  rp.active = TRUE
+  AND ai.state != 'cancel'
+GROUP ...
+Token Usage:
+  - Prompt Tokens: 1011
+  - Candidates Tokens: 95
+  - Total Tokens: 1106
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-28 12:32:57
+Question: How many orders are in each state?
+Generated SQL: SELECT state, COUNT(*) AS order_count
+FROM sale_order
+WHERE active = TRUE
+GROUP BY state
+ORDER BY order_count DESC
+LIMIT 10;...
+Token Usage:
+  - Prompt Tokens: 1025
+  - Candidates Tokens: 41
+  - Total Tokens: 1066
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-28 12:34:52
+Question: Show me the top 5 products by quantity sold
+Generated SQL: SELECT
+  pp.name AS product_name,
+  SUM(sm.product_qty) AS total_quantity_sold
+FROM mrp_production AS sm
+JOIN product_product AS pp
+  ON sm.product_id = pp.id
+WHERE
+  sm.active = TRUE
+GROUP BY
+  pp.na...
+Token Usage:
+  - Prompt Tokens: 1013
+  - Candidates Tokens: 92
+  - Total Tokens: 1105
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-28 12:41:18
+Question: Show me the top 5 products by quantity sold
+Generated SQL: SELECT
+  pp.name AS product_name,
+  SUM(sm.product_qty) AS total_quantity_sold
+FROM mrp_production AS sm
+JOIN product_product AS pp
+  ON sm.product_id = pp.id
+WHERE
+  sm.state = 'done' AND sm.active =...
+Token Usage:
+  - Prompt Tokens: 1013
+  - Candidates Tokens: 100
+  - Total Tokens: 1113
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-28 17:24:28
+Question: How many customers do we have?
+Generated SQL: SELECT count(*) AS customer_count
+FROM res_partner
+WHERE customer = TRUE
+AND active = TRUE
+LIMIT 1000;...
+Token Usage:
+  - Prompt Tokens: 9470
+  - Candidates Tokens: 35
+  - Total Tokens: 9505
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-28 17:31:36
+Question: Find me top 20 tables in descending order in size.
+Generated SQL: SELECT
+    table_name,
+    pg_size_pretty(pg_total_relation_size(table_name)) AS table_size
+FROM (
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+) AS all_t...
+Token Usage:
+  - Prompt Tokens: 13517
+  - Candidates Tokens: 91
+  - Total Tokens: 13608
+Model: gemini-2.0-flash-exp
+======================================================================
+

@@ -1,0 +1,255 @@
+================================================================================
+POSTGRESQL AI AGENT - TEST GUIDE
+================================================================================
+
+This file contains test questions and their corresponding SQL queries.
+Run the questions through the AI agent, then verify results with the SQL below.
+
+Usage:
+  1. Run: .\run-agent.ps1 "question here"
+  2. Compare the result with the SQL query result
+  3. Verify they match (or are reasonably close)
+
+================================================================================
+TEST 1: BASIC COUNT - CUSTOMERS
+================================================================================
+
+Question:
+"How many customers do we have?"
+
+Verification SQL:
+SELECT COUNT(*) as customer_count FROM res_partner WHERE active = TRUE;
+
+Expected Result: ~4739
+
+
+================================================================================
+TEST 2: BASIC COUNT - PRODUCTS
+================================================================================
+
+Question:
+"How many products are in the database?"
+
+Verification SQL:
+SELECT COUNT(*) as product_count FROM product_product WHERE active = TRUE;
+
+Expected Result: ~1905
+
+
+================================================================================
+TEST 3: BASIC COUNT - ORDERS
+================================================================================
+
+Question:
+"How many sales orders do we have?"
+
+Verification SQL:
+SELECT COUNT(*) as order_count FROM sale_order WHERE active = TRUE;
+
+Expected Result: ~97041
+
+
+================================================================================
+TEST 4: BASIC COUNT - ORDER LINES
+================================================================================
+
+Question:
+"What is the total number of order line items?"
+
+Verification SQL:
+SELECT COUNT(*) as line_count FROM sale_order_line;
+
+Expected Result: ~350054
+
+
+================================================================================
+TEST 5: TOTAL SALES REVENUE
+================================================================================
+
+Question:
+"What is the total sales amount from all orders?"
+
+Verification SQL:
+SELECT SUM(amount_total) as total_sales 
+FROM sale_order 
+WHERE active = TRUE AND state NOT IN ('draft', 'cancel');
+
+Expected Result: ~$486,000,000
+
+
+================================================================================
+TEST 6: AVERAGE ORDER VALUE
+================================================================================
+
+Question:
+"What is the average order value?"
+
+Verification SQL:
+SELECT AVG(amount_total) as avg_order_value 
+FROM sale_order 
+WHERE active = TRUE AND state NOT IN ('draft', 'cancel') AND amount_total > 0;
+
+Expected Result: ~$5,019
+
+
+================================================================================
+TEST 7: TOP 5 ORDERS BY AMOUNT
+================================================================================
+
+Question:
+"Show me the top 5 orders by total amount"
+
+Verification SQL:
+SELECT name, amount_total 
+FROM sale_order 
+WHERE active = TRUE 
+ORDER BY amount_total DESC 
+LIMIT 5;
+
+Expected Result: 5 orders with highest amounts
+
+
+================================================================================
+TEST 8: TOP 5 CUSTOMERS BY ORDER COUNT
+================================================================================
+
+Question:
+"Show me the top 5 customers by number of orders"
+
+Verification SQL:
+SELECT rp.name as customer_name, COUNT(*) as order_count 
+FROM sale_order so 
+JOIN res_partner rp ON so.partner_id = rp.id 
+WHERE so.active = TRUE 
+GROUP BY rp.name 
+ORDER BY order_count DESC 
+LIMIT 5;
+
+Expected Result: 5 customers with most orders
+
+
+================================================================================
+TEST 9: ORDERS IN DATE RANGE
+================================================================================
+
+Question:
+"How many orders were placed in the last 30 days?"
+
+Verification SQL:
+SELECT COUNT(*) as recent_orders 
+FROM sale_order 
+WHERE active = TRUE 
+AND date_order >= CURRENT_DATE - INTERVAL '30 days';
+
+Expected Result: Varies by date
+
+
+================================================================================
+TEST 10: TOTAL REVENUE LAST MONTH
+================================================================================
+
+Question:
+"What were total sales last month?"
+
+Verification SQL:
+SELECT SUM(amount_total) as monthly_revenue 
+FROM sale_order 
+WHERE active = TRUE 
+AND state NOT IN ('draft', 'cancel')
+AND date_order >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
+AND date_order < DATE_TRUNC('month', CURRENT_DATE);
+
+Expected Result: Varies by month
+
+
+================================================================================
+TEST 11: REVENUE BY MONTH (LAST 6 MONTHS)
+================================================================================
+
+Question:
+"Show me total revenue by month for the last 6 months"
+
+Verification SQL:
+SELECT 
+    DATE_TRUNC('month', date_order) as month,
+    SUM(amount_total) as revenue
+FROM sale_order 
+WHERE active = TRUE 
+AND date_order >= CURRENT_DATE - INTERVAL '6 months'
+GROUP BY DATE_TRUNC('month', date_order)
+ORDER BY month DESC;
+
+Expected Result: 6 months of revenue data
+
+
+================================================================================
+TEST 12: AVERAGE ITEMS PER ORDER
+================================================================================
+
+Question:
+"What is the average number of line items per order?"
+
+Verification SQL:
+SELECT AVG(line_count) as avg_items_per_order 
+FROM (
+    SELECT order_id, COUNT(*) as line_count 
+    FROM sale_order_line 
+    GROUP BY order_id
+) subq;
+
+Expected Result: ~3.5
+
+
+================================================================================
+TEST 13: PRODUCTS WITH LOW STOCK
+================================================================================
+
+Question:
+"How many products have less than 100 units in stock?"
+
+Verification SQL:
+SELECT COUNT(DISTINCT sq.product_id) as low_stock_count
+FROM stock_quant sq
+WHERE sq.quantity < 100;
+
+Expected Result: Varies
+
+
+================================================================================
+TEST 14: ORDERS BY STATE/STATUS
+================================================================================
+
+Question:
+"How many orders are in each state?"
+
+Verification SQL:
+SELECT state, COUNT(*) as count 
+FROM sale_order 
+WHERE active = TRUE 
+GROUP BY state 
+ORDER BY count DESC;
+
+Expected Result: Breakdown by state (sale, done, draft, etc.)
+
+
+================================================================================
+TEST 15: TOP PRODUCTS BY QUANTITY SOLD
+================================================================================
+
+Question:
+"Show me the top 5 products by quantity sold"
+
+Verification SQL:
+SELECT 
+    pp.name as product_name,
+    SUM(sol.product_uom_qty) as total_quantity
+FROM sale_order_line sol
+JOIN product_product pp ON sol.product_id = pp.id
+JOIN sale_order so ON sol.order_id = so.id
+WHERE so.active = TRUE
+GROUP BY pp.name
+ORDER BY total_quantity DESC
+LIMIT 5;
+
+Expected Result: 5 products with highest sales quantity
+
