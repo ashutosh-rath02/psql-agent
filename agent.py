@@ -1,11 +1,11 @@
 """
 PostgreSQL AI Agent - CLI Interface
-Simple command-line interface for querying database with natural language
+Main entry point for the application
 """
 
 import sys
 import argparse
-from db_agent import DatabaseAgent
+from app.core.agent import DatabaseAgent
 
 
 def main():
@@ -31,12 +31,6 @@ def main():
     agent = DatabaseAgent()
     
     try:
-        # Connect to database
-        agent.connect()
-        
-        # Discover schema (one-time setup)
-        agent.discover_schema()
-        
         if args.interactive:
             # Interactive mode
             print("\n🤖 PostgreSQL AI Agent - Interactive Mode")
@@ -67,11 +61,7 @@ def main():
     except Exception as e:
         print(f"\nERROR: Fatal error: {e}")
         sys.exit(1)
-        
-    finally:
-        agent.disconnect()
 
 
 if __name__ == '__main__':
     main()
-

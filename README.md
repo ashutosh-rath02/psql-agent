@@ -114,12 +114,22 @@ python agent.py "Show customers who haven't ordered in 90 days"
 
 ```
 postgres-agent/
-├── agent.py          # CLI interface
-├── db_agent.py       # Core agent logic
-├── requirements.txt  # Python dependencies
-├── env.example       # Environment template
-├── PRD.md           # Project requirements
-└── README.md        # This file
+├── agent.py              # CLI entry point
+├── requirements.txt      # Python dependencies
+├── run-agent.ps1        # Windows helper script
+├── env.example           # Environment template
+├── app/                  # Application modules
+│   ├── core/            # Core orchestrator
+│   ├── database/        # Data access layer
+│   ├── ai/              # AI integration
+│   ├── security/        # Query validation
+│   └── formatters/      # Output formatting
+└── docs/                # Documentation
+    ├── README.md        # This file
+    ├── QUICKSTART.md    # Quick start guide
+    ├── PRD.md          # Project requirements
+    ├── ARCHITECTURE.md  # Architecture overview
+    └── TEST-GUIDE.txt  # Testing guide
 ```
 
 ## How It Works
