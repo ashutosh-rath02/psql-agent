@@ -30,3 +30,4 @@ if (-not (Test-Path ".env")) {
 & ".\venv\Scripts\python.exe" odoo_agent.py $Arguments
 
 
+

@@ -76,6 +76,8 @@ Requirements:
 7. Use PostgreSQL syntax
 8. Handle common Odoo fields like 'active', 'state', 'date_order', etc.
 9. When returning currency amounts, use descriptive column names like 'total_sales', 'amount_total', etc.
+10. When querying table sizes using pg_total_relation_size(), always cast table_name to regclass or use proper schema qualification like ('public.' || table_name)::regclass
+11. For table size queries, use the pattern: pg_total_relation_size(('public.' || table_name)::regclass) or pg_total_relation_size(quote_ident(table_schema) || '.' || quote_ident(table_name))::regclass)
 
 SQL Query:
 """

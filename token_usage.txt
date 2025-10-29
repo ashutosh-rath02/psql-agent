@@ -126,3 +126,229 @@ Token Usage:
 Model: gemini-2.0-flash-exp
 ======================================================================
 
+
+======================================================================
+Timestamp: 2025-10-29 09:59:27
+Question: Find me top 20 tables in descending order in size.
+Generated SQL: SELECT
+    table_name,
+    pg_size_pretty(pg_total_relation_size(table_name)) AS table_size
+FROM (
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+) AS all_t...
+Token Usage:
+  - Prompt Tokens: 13525
+  - Candidates Tokens: 91
+  - Total Tokens: 13616
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 10:06:31
+Question: Find me top 20 tables in descending order in size.
+Generated SQL: SELECT
+    table_name,
+    pg_size_pretty(pg_total_relation_size(table_name)) AS table_size
+FROM (
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+    AND ta...
+Token Usage:
+  - Prompt Tokens: 13525
+  - Candidates Tokens: 102
+  - Total Tokens: 13627
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 10:08:09
+Question: Find me top 20 tables in descending order in size.
+Generated SQL: SELECT
+    table_name,
+    pg_size_pretty(pg_total_relation_size(('public.' || table_name)::regclass)) AS table_size
+FROM
+    information_schema.tables
+WHERE
+    table_schema = 'public'
+AND table_type...
+Token Usage:
+  - Prompt Tokens: 13631
+  - Candidates Tokens: 104
+  - Total Tokens: 13735
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 10:09:13
+Question: Find me top 20 tables in descending order in size, taking account that do not involve any odoo default tables.
+Generated SQL: SELECT
+    table_name,
+    pg_size_pretty(pg_total_relation_size(('public.' || table_name)::regclass)) AS table_size
+FROM
+    information_schema.tables
+WHERE
+    table_schema = 'public'
+    AND table_...
+Token Usage:
+  - Prompt Tokens: 13961
+  - Candidates Tokens: 213
+  - Total Tokens: 14174
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:21:08
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the sale_order table for the data.
+Generated SQL: SELECT
+  COUNT(DISTINCT so.id) AS total_machine_next_ca_deliveries
+FROM sale_order AS so
+JOIN res_partner AS rp
+  ON so.partner_id = rp.id
+WHERE
+  rp.name = 'Machine Next CA'
+  AND so.state = 'sale';...
+Token Usage:
+  - Prompt Tokens: 13965
+  - Candidates Tokens: 76
+  - Total Tokens: 14041
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:22:50
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the stock_move table for the data. picking_code must be outgoing. You may have to link multiple tables
+Generated SQL: SELECT
+  COUNT(sm.id) AS number_of_deliveries
+FROM stock_move AS sm
+JOIN stock_picking AS sp
+  ON sm.picking_id = sp.id
+JOIN stock_picking_type AS spt
+  ON sp.picking_type_id = spt.id
+JOIN res_company...
+Token Usage:
+  - Prompt Tokens: 14028
+  - Candidates Tokens: 147
+  - Total Tokens: 14175
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:23:06
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the stock_move table for the data. picking_code must be outgoing. You may have to link multiple tables
+Generated SQL: SELECT
+  COUNT(sm.id)
+FROM stock_move AS sm
+JOIN product_product AS pp
+  ON sm.product_id = pp.id
+JOIN product_template AS pt
+  ON pp.product_tmpl_id = pt.id
+JOIN stock_picking_type AS spt
+  ON sm.pic...
+Token Usage:
+  - Prompt Tokens: 14028
+  - Candidates Tokens: 110
+  - Total Tokens: 14138
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:23:43
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the stock_move table for the data. picking_code must be outgoing. You may have to link multiple tables
+Generated SQL: SELECT
+  COUNT(sm.id) AS delivered_machine_count
+FROM stock_move AS sm
+JOIN product_product AS pp
+  ON sm.product_id = pp.id
+JOIN product_template AS pt
+  ON pp.product_tmpl_id = pt.id
+JOIN stock_pick...
+Token Usage:
+  - Prompt Tokens: 14028
+  - Candidates Tokens: 126
+  - Total Tokens: 14154
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:24:14
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the stock_move table for the data. picking_code must be outgoing. You may have to link multiple tables, instead of machine name you can use categ_id=130
+Generated SQL: SELECT
+  COUNT(sm.id) AS delivered_machine_count
+FROM stock_move AS sm
+JOIN stock_picking AS sp
+  ON sm.picking_id = sp.id
+JOIN stock_picking_type AS spt
+  ON sp.picking_type_id = spt.id
+WHERE
+  sm.ca...
+Token Usage:
+  - Prompt Tokens: 14044
+  - Candidates Tokens: 107
+  - Total Tokens: 14151
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:25:51
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the stock_move table for the data. picking_code MUST be outgoing. You may have to link multiple tables
+Generated SQL: SELECT
+  COUNT(sm.id) AS delivered_machine_count
+FROM stock_move AS sm
+JOIN product_product AS pp
+  ON sm.product_id = pp.id
+JOIN product_template AS pt
+  ON pp.product_tmpl_id = pt.id
+JOIN stock_pick...
+Token Usage:
+  - Prompt Tokens: 14028
+  - Candidates Tokens: 126
+  - Total Tokens: 14154
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 13:26:42
+Question: Can you find me how many machines of Machine Next CA are delivered to customer. You can look in the stock_move table for the data. picking_code MUST be outgoing on the stock_move table. You may have to link multiple tables, instead of machine name you can use categ_id=130
+Generated SQL: SELECT
+  COUNT(sm.id) AS delivered_machine_count
+FROM stock_move AS sm
+JOIN stock_picking_type AS spt
+  ON sm.picking_type_id = spt.id
+WHERE
+  sm.categ_id = 130
+  AND spt.code = 'outgoing'
+  AND sm.st...
+Token Usage:
+  - Prompt Tokens: 14444
+  - Candidates Tokens: 88
+  - Total Tokens: 14532
+Model: gemini-2.0-flash-exp
+======================================================================
+
+
+======================================================================
+Timestamp: 2025-10-29 16:17:25
+Question: Can you tell me how many tables are there in our db?
+Generated SQL: SELECT count(*) AS table_count
+FROM information_schema.tables
+WHERE table_schema = 'public';...
+Token Usage:
+  - Prompt Tokens: 14392
+  - Candidates Tokens: 28
+  - Total Tokens: 14420
+Model: gemini-2.0-flash-exp
+======================================================================
+
